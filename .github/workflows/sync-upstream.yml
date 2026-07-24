@@ -194,7 +194,7 @@ jobs:
         run: npx wrangler deploy
 
       - name: Prepare Pages bundle
-        if: steps.check.outputs.needed == 'true'
+        if: steps.check.outputs.needed == 'true' && secrets.PAGES_PROJECT_NAME != ''
         working-directory: sub-store-workers
         run: |
           mkdir -p pages-dist
@@ -202,7 +202,7 @@ jobs:
           cp dist/quickjs.wasm pages-dist/quickjs.wasm
 
       - name: Deploy Pages
-        if: steps.check.outputs.needed == 'true'
+        if: steps.check.outputs.needed == 'true' && secrets.PAGES_PROJECT_NAME != ''
         working-directory: sub-store-workers
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -215,7 +215,7 @@ jobs:
             --commit-dirty=true
 
       - name: Set Pages environment variables
-        if: steps.check.outputs.needed == 'true'
+        if: steps.check.outputs.needed == 'true' && secrets.PAGES_PROJECT_NAME != ''
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -246,7 +246,7 @@ jobs:
           fi
 
       - name: Health check
-        if: steps.check.outputs.needed == 'true'
+        if: steps.check.outputs.needed == 'true' && secrets.WORKERS_SUBDOMAIN != ''
         run: |
           URL="https://sub-store-workers.${{ secrets.WORKERS_SUBDOMAIN }}.workers.dev"
           for i in 1 2 3; do
